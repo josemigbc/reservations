@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework import permissions
 from django.conf import settings
 import stripe
 
@@ -21,3 +22,7 @@ def proccess_payment(charge_token,price):
     )
     
     return charge
+
+class PassengerViewset(viewsets.ModelViewSet):
+    serializer_class = 
+

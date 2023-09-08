@@ -4,7 +4,8 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 class Bus(models.Model):
 
-    registration_number = models.CharField(_("Registration Number"), max_length=50)
+    registration_number = models.CharField(_("Registration Number"), max_length=7)
+    capacity = models.IntegerField(_("Capacity"),default=36)
 
     class Meta:
         verbose_name = _("Bus")

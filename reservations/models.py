@@ -22,7 +22,7 @@ class Passenger(models.Model):
 class Seat(models.Model):
 
     trip = models.ForeignKey(Trip, verbose_name=_("Trip"), on_delete=models.CASCADE)
-    number = models.IntegerField(_("NUmber"))
+    number = models.IntegerField(_("Number"))
     taken = models.BooleanField(_("Taken"))
 
     class Meta:
@@ -36,8 +36,7 @@ class Reservation(models.Model):
 
     passenger = models.ForeignKey(Passenger, verbose_name=_("Passenger"), on_delete=models.CASCADE)
     seat = models.ForeignKey(Seat, verbose_name=_(""), on_delete=models.CASCADE)
-    charge_token = models.CharField(_("Payment ID"), max_length=100,null=True,blank=True)
-    payment_status = models.CharField(_("Payment Status"), max_length=50)
+    payment_status = models.CharField(_("Payment Status"),default="0",choices=[("0","Pending"),("1","Payed"),("2","Cancelled")], max_length=50)
     datetime = models.DateTimeField(_("Datetime"), auto_now=False, auto_now_add=True)
 
     class Meta:
