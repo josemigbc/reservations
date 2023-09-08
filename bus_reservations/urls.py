@@ -15,8 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
+from trips.views import TripWithSeatNoTaken
+from reservations import views as reservation_views
+from payments.views import PaymentView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',include('authentication.urls')),
+    path("trip/", TripWithSeatNoTaken.as_view(), name="trip-list"),
+    path("seat/<int:pk>/", reservation_views.SeatListView.as_view(), name="seat-list"),
+    path("payment/",PaymentView.as_view(),name="payment"),
 ]
+
+urlpatterns += reservation_views.reservation_router.urls + reservation_views.passenger_router.urls

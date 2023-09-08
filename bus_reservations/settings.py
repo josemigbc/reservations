@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'authentication',
+    'trips',
+    'reservations',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +126,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STRIPE_SECRET_KEY = "pk_test_51NnSDsIUYmWZzKQwoN5nMYF70xBIhTUHMViH31RH21cqh7P7iZMFRpjtF0GPICLaAkQjhLzOdSKhNk6j6RJVbgPF00ZTRTTu7Z"
+STRIPE_PUBLIC_KEY = "sk_test_51NnSDsIUYmWZzKQwgnJy0IS5MWRtIgtwDtOVmYgEnc6iF62cgsrNMJb7al5423Ddkvzcy63falKI5OPsgs54UMJG00z0PwxXXC"

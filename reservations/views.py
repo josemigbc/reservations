@@ -1,28 +1,42 @@
-from rest_framework import viewsets
+from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions
-from django.conf import settings
-import stripe
+from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
+from rest_framework.routers import SimpleRouter
+from .models import Passenger, Seat, Reservation
+from .serializers import PassengerSerializer, SeatSerializer, ReservationSerializer
 
-# Create your views here.
-def proccess_payment(charge_token,price):
-    """
-    Args:
-        charge_token (str): Token generated in fronted using information of card.
-        price (int): price of product
-
-    Returns:
-        Charge: Object Charge returned by creation of charge. 
-    """
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    charge = stripe.Charge.create(
-        amount=price,
-        currency="usd",
-        description="Purchase of a ticket",
-        source=charge_token
-    )
+# Create your views here
+class PassengerViewset(ModelViewSet):
+    serializer_class = PassengerSerializer
+    queryset = Passenger.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
     
-    return charge
+    def get_queryset(self):
+        if self.action != "list":
+            return super().get_queryset()
+        return self.queryset.filter(user=self.request.user)
+    
+class SeatListView(ListAPIView):
+    serializer_class = SeatSerializer
+    queryset = Seat.objects.all()
+    
+    def get_queryset(self):
+        trip_id = self.kwargs['pk']
+        return self.queryset.filter(trip=trip_id)
+    
+class ReservationViewset(ModelViewSet):
+    serializer_class = ReservationSerializer
+    queryset = Reservation.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        if self.action != "list":
+            return super().get_queryset()
+        return self.queryset.filter(passenger__user=self.request.user)
+    
+passenger_router = SimpleRouter()
+passenger_router.register(r"passenger",PassengerViewset)
 
-class PassengerViewset(viewsets.ModelViewSet):
-    serializer_class = 
-
+reservation_router = SimpleRouter()
+reservation_router.register(r"reservation",ReservationViewset)
