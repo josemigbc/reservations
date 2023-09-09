@@ -35,10 +35,6 @@ class PaymentView(APIView):
         try:
             charge_token = request.data['charge_token']
             reservation_id = request.data['reservation_id']
-        except KeyError:
-            return Response({"message": "The charge token and reservation id must be given."})
-
-        try:
             reservation = Reservation.objects.get(id=reservation_id)
             spent = timezone.now() - reservation.datetime
             
@@ -48,11 +44,14 @@ class PaymentView(APIView):
             
             charge = proccess_payment(charge_token,reservation.seat.trip.price)
         
+        except KeyError:
+            return Response(
+                data={"message": "The charge token and reservation id must be given."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         except stripe.error.CardError as e:
             return Response(data={"message":str(e)},status=status.HTTP_401_UNAUTHORIZED)
-        
-        except ReservationTimeOut as e:
-            return Response(data={"message": str(e)},status=status.HTTP_404_NOT_FOUND)
         
         except Exception as e:
             return Response(data={"message": str(e)},status=status.HTTP_404_NOT_FOUND)

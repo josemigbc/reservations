@@ -19,7 +19,7 @@ class PassengerViewset(ModelViewSet):
     
 class SeatListView(ListAPIView):
     serializer_class = SeatSerializer
-    queryset = Seat.objects.all()
+    queryset = Seat.objects.filter(taken=False)
     
     def get_queryset(self):
         trip_id = self.kwargs['pk']
