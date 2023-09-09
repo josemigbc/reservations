@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zz8756zv87lt0a_&y-*$h!_issns&lkb0weduw*5w6ibp=9q26'
+SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-zz8756zv87lt0a_&y-*$h!_issns&lkb0weduw*5w6ibp=9q26')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -78,11 +83,21 @@ WSGI_APPLICATION = 'bus_reservations.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+import dj_database_url
+
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
+else:
+    DATABASES = {
+    'default': dj_database_url.config(
+        default='postgresql://postgres:postgres@localhost:5432/mysite',
+        conn_max_age=600
+    )
 }
 
 
@@ -127,5 +142,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STRIPE_SECRET_KEY = "pk_test_51NnSDsIUYmWZzKQwoN5nMYF70xBIhTUHMViH31RH21cqh7P7iZMFRpjtF0GPICLaAkQjhLzOdSKhNk6j6RJVbgPF00ZTRTTu7Z"
-STRIPE_PUBLIC_KEY = "sk_test_51NnSDsIUYmWZzKQwgnJy0IS5MWRtIgtwDtOVmYgEnc6iF62cgsrNMJb7al5423Ddkvzcy63falKI5OPsgs54UMJG00z0PwxXXC"
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
