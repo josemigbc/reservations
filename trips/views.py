@@ -39,7 +39,7 @@ class TripWithSeatNoTaken(ListAPIView):
         if not Trip.objects.all():
             bus = Bus.objects.create(registration_number="B100000")
             Trip.objects.create(origin="A",destination="B",
-                                datetime=timezone.now()+datetime.timedelta(month=3),
+                                datetime=timezone.now()+datetime.timedelta(days=90),
                                 bus=bus,price=100
                                 )
         return super().list(request, *args, **kwargs)
