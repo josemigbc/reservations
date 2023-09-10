@@ -2,7 +2,7 @@ from rest_framework.generics import ListAPIView
 from .exceptions import MissingParameters,BadDate
 from django.utils import timezone
 from .serializers import TripSerializer
-from .models import Trip
+from .models import Trip,Bus
 import datetime
 
 # Create your views here.
@@ -34,3 +34,12 @@ class TripWithSeatNoTaken(ListAPIView):
             datetime__gt=now).distinct()
         
         return queryset
+    
+    def list(self, request, *args, **kwargs):
+        if not Trip.objects.all():
+            bus = Bus.objects.create(registration_number="B100000")
+            Trip.objects.create(origin="A",destination="B",
+                                datetime=timezone.now()+datetime.timedelta(month=3),
+                                bus=bus,price=100
+                                )
+        return super().list(request, *args, **kwargs)
