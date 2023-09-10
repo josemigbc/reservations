@@ -6,7 +6,6 @@ coverage==7.2.7
 dj-database-url==2.1.0
 Django==4.2.3
 djangorestframework==3.14.0
-djangorestframework-authentication @ file:///media/jose/JOSE/Projects/djangorestframework_auth/dist/djangorestframework-authentication-0.1.tar.gz#sha256=d999baf4d3fd10a3182bd71cc78053c3879c2ec0ef90fce552c56d82753f3110
 djangorestframework-simplejwt==5.2.2
 freezegun==1.2.2
 gunicorn==21.2.0
