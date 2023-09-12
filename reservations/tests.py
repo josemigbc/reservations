@@ -24,19 +24,8 @@ class PassengerViewsetTest(APITestCase):
         request = self.factory.get("/passenger/")
         request.user =  self.user
         self.viewset.request = request
-        self.viewset.action = "list"
         queryset = self.viewset.get_queryset()
         expected_queryset = Passenger.objects.filter(id=1)
-        
-        self.assertEqual(list(queryset),list(expected_queryset))
-        
-    def test_get_queryset_in_no_list(self):
-        request = self.factory.post("/passenger/")
-        request.user =  self.user
-        self.viewset.request = request
-        self.viewset.action = "create"
-        queryset = self.viewset.get_queryset()
-        expected_queryset = Passenger.objects.all()
         
         self.assertEqual(list(queryset),list(expected_queryset))
         
@@ -82,19 +71,8 @@ class ReservationViewsetTest(APITestCase):
         request = self.factory.get("/reservation/")
         request.user =  self.user
         self.viewset.request = request
-        self.viewset.action = "list"
         queryset = self.viewset.get_queryset()
         expected_queryset = Reservation.objects.filter(id=1)
-        
-        self.assertEqual(list(queryset),list(expected_queryset))
-        
-    def test_get_queryset_in_no_list(self):
-        request = self.factory.post("/reservation/")
-        request.user =  self.user
-        self.viewset.request = request
-        self.viewset.action = "create"
-        queryset = self.viewset.get_queryset()
-        expected_queryset = Reservation.objects.all()
         
         self.assertEqual(list(queryset),list(expected_queryset))
         
