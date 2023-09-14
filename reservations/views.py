@@ -47,11 +47,20 @@ class ReservationViewset(ModelViewSet):
             raise exceptions.ValidationError(
                 detail={'error': 'That passenger field is a required field.'})
         except Exception as exc:
-            raise exceptions.NotFound(detail={"passenger":str(exc)})
+            raise exceptions.NotFound(detail={"passenger": str(exc)})
         if passenger.user != self.request.user:
             raise exceptions.AuthenticationFailed(
                 detail={"error": "Passenger does not belong to user"})
         return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    def destroy(self, request, *args, **kwargs):
+        reservation = self.get_object()
+        if reservation.payment_status == "1":
+            raise exceptions.ValidationError(detail={"payment_status":["This reservation is payed and it can not be deleted."]})
+        return super().destroy(request, *args, **kwargs)
 
 
 passenger_router = SimpleRouter()

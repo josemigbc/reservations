@@ -2,6 +2,7 @@ from rest_framework.test import APITestCase,APIRequestFactory
 from unittest.mock import MagicMock,patch
 from payments.views import proccess_payment,PaymentView
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from reservations.models import Passenger,Reservation,Seat
 from trips.models import Bus,Trip
 import datetime
@@ -24,7 +25,7 @@ class PaymentsTest(APITestCase):
     
     def setUp(self) -> None:
         Trip.objects.create(
-            origin="A", destination="B",datetime=datetime.datetime.now() + datetime.timedelta(days=3),
+            origin="A", destination="B",datetime=timezone.now() + datetime.timedelta(days=3),
             price=100,bus=self.bus
         )
         self.reservation = Reservation.objects.create(passenger=self.passenger,seat=Seat.objects.get(id=1))
@@ -56,7 +57,6 @@ class PaymentsTest(APITestCase):
         
     def test_view_with_reservation_does_not_exist(self):
         response = self.client.post("/payment/",data={"charge_token":"tok","reservation_id":2000})
-        print(response.json())
         self.assertEqual(response.status_code,404)
     
     @patch('stripe.Charge.create')
