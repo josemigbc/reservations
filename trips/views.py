@@ -19,7 +19,10 @@ class TripWithSeatNoTaken(ListAPIView):
             raise MissingParameters
         
         now = timezone.now()
-        if now.date() > datetime.datetime.strptime(date,"%Y-%m-%d").date():
+        try:
+            if now.date() > datetime.datetime.strptime(date,"%Y-%m-%d").date():
+                raise BadDate
+        except:
             raise BadDate
         
         queryset = self.queryset.filter(

@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'authentication',
+    "rest_framework_simplejwt",
+    'accounts',
     'trips',
     'reservations',
     'payments',
@@ -53,6 +56,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -154,3 +158,21 @@ if not DEBUG:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+
+CORS_ALLOWED_ORIGINS = [
+    os.environ.get('FRONTED_HOST','http://localhost:3000'),
+]
+
+GOOGLE_AUTHENTICATION = True
+GOOGLE_AUTHENTICATION_CLIENT_ID = "1039157124158-7s4ctqbv2l2pev8fhhugd59nf5vvm1om.apps.googleusercontent.com"
+GOOGLE_AUTHENTICATION_CLIENT_SECRET = "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"
+GOOGLE_AUTHENTICATION_REDIRECT = "http://localhost:3000/profile"
+
+JWT_AUTHENTICATION = True
+
+if JWT_AUTHENTICATION:
+    REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES':[
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ],
+    }

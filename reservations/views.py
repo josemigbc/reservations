@@ -8,7 +8,6 @@ from .models import Passenger, Seat, Reservation
 from .serializers import PassengerSerializer, SeatSerializer, ReservationSerializer
 import datetime
 
-
 class PassengerViewset(ModelViewSet):
     serializer_class = PassengerSerializer
     queryset = Passenger.objects.all()
@@ -25,8 +24,6 @@ class SeatListView(ListAPIView):
     def get_queryset(self):
         trip_id = self.kwargs['pk']
         return self.queryset.filter(trip=trip_id)
-
-
 class ReservationViewset(ModelViewSet):
     serializer_class = ReservationSerializer
     queryset = Reservation.objects.all()
@@ -38,11 +35,12 @@ class ReservationViewset(ModelViewSet):
                                          )
         to_delete.delete()
         return self.queryset.filter(passenger__user=self.request.user)
+    
 
     def create(self, request, *args, **kwargs):
         try:
             passenger = Passenger.objects.get(
-                id=self.request.data['passenger'])
+                id=self.request.data['passenger_id'])
         except KeyError:
             raise exceptions.ValidationError(
                 detail={'error': 'That passenger field is a required field.'})
@@ -61,6 +59,7 @@ class ReservationViewset(ModelViewSet):
         if reservation.payment_status == "1":
             raise exceptions.ValidationError(detail={"payment_status":["This reservation is payed and it can not be deleted."]})
         return super().destroy(request, *args, **kwargs)
+
 
 
 passenger_router = SimpleRouter()

@@ -9,23 +9,25 @@ class PassengerSerializer(serializers.ModelSerializer):
         fields = "__all__"
         
 class SeatSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Seat
         fields = "__all__"
+        depth = 1
         
 class ReservationSerializer(serializers.ModelSerializer):
     
+    passenger_id = serializers.IntegerField(write_only=True)
+    seat_id = serializers.IntegerField(write_only=True)
     class Meta:
         model = Reservation
         fields = "__all__"
-        read_only_fields = ("payment_status","charge_id","datetime")
-        
-        
+        read_only_fields = ("payment_status","charge_id","datetime","passenger_id","seat_id")
+        depth = 2
+            
     def is_valid(self, *, raise_exception=False):
         error = {}
         try:
-            seat_id = self.initial_data["seat"]
+            seat_id = self.initial_data["seat_id"]
             seat = Seat.objects.get(id=seat_id)
             if seat.taken:
                 error = {'error':{'seat': ['The seat must not be taken.']}}
@@ -40,3 +42,4 @@ class ReservationSerializer(serializers.ModelSerializer):
             return False
         
         return super().is_valid(raise_exception=raise_exception)
+        
