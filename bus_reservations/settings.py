@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'authentication',
     "rest_framework_simplejwt",
+    'drf_yasg',
     'accounts',
     'trips',
     'reservations',

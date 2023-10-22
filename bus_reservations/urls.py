@@ -21,10 +21,12 @@ from reservations import views as reservation_views
 from payments.views import PaymentView
 from accounts.views import GoogleAuthCallback
 from authentication.views import UserGoogleLogin
+from .docs import schema_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     #path('',include('authentication.urls')),
+    path('docs/',schema_view.with_ui('swagger',cache_timeout=0),name="docs"),
     path('auth/',include('accounts.urls')),
     path("trip/", TripWithSeatNoTaken.as_view(), name="trip-list"),
     path("seat/<int:pk>/", reservation_views.SeatListView.as_view(), name="seat-list"),
