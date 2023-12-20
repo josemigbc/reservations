@@ -1,1 +1,1 @@
-API schema https://reservations-79jy.onrender.com/reservation/
+API schema https://reservations-79jy.onrender.com/
